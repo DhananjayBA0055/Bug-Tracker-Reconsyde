@@ -1,0 +1,68 @@
+// Pure rendering checks; no browser, network access or authentication shortcuts.
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const nodes=new Map();
+function node(){return {innerHTML:'',textContent:'',value:'',style:{},insertAdjacentHTML(where,html){this.innerHTML+=html},addEventListener(){},querySelector(){return node()},querySelectorAll(){return []}}}
+const context=vm.createContext({console,setTimeout,clearTimeout,URLSearchParams,FormData,Blob,URL,structuredClone,document:{querySelector:q=>{if(!nodes.has(q))nodes.set(q,node());return nodes.get(q)},querySelectorAll:()=>[],addEventListener(){}},window:{location:{}},fetch:()=>new Promise(()=>{})});
+vm.runInContext(fs.readFileSync('app/static/app.js','utf8'),context);
+vm.runInContext(fs.readFileSync('app/static/v2.js','utf8'),context);
+vm.runInContext(fs.readFileSync('app/static/v3.js','utf8'),context);
+const seed=JSON.parse(fs.readFileSync('data/workbook.json','utf8'));
+const people=[{id:1,name:'PD',role:'process_designer'},{id:2,name:'Product Dev',role:'product_developer'},{id:3,name:'QA',role:'quality_analyst'}];
+vm.runInContext(`state.meta=${JSON.stringify({fields:seed.fields,lists:seed.lists,people,roles:['super_admin','admin','manager','product_developer','process_designer','quality_analyst','process_developer','client'],permission_keys:['raise','manage_users'],role_permissions:{},source_file:seed.source_file})};state.issues=${JSON.stringify(seed.issues)};state.user={id:1,name:'PD',role:'process_designer',effective_permissions:['raise','edit','reassign','test_close']};`,context);
+assert.equal(vm.runInContext('availablePages().includes("performance")',context),false);
+assert.match(vm.runInContext('personOptions(["product_developer"])',context),/Product Dev/);
+vm.runInContext('newIssue()',context);assert.match(nodes.get('#modal').innerHTML,/Assign developer/);assert.match(nodes.get('#modal').innerHTML,/20 MB/);
+vm.runInContext('state.user={role:"manager",effective_permissions:["performance","reports"]}',context);
+assert.equal(vm.runInContext('availablePages().includes("performance")',context),true);
+assert.equal(vm.runInContext('canCreate()',context),false);
+vm.runInContext('state.performance={employees:[],teams:[],best_performers:[],worst_performers:[],missing_attribution:99,note:"Measured history only"}',context);
+assert.match(vm.runInContext('performancePage()',context),/No eligible ranking/);
+vm.runInContext('state.knowledge=[]',context);assert.match(vm.runInContext('chatPage()',context),/0 verified resolutions/);
+assert.match(vm.runInContext('dashboard()',context),/studio-hero/);
+assert.match(vm.runInContext('boardView(state.issues)',context),/studio-board/);
+assert.match(vm.runInContext('pill("In QA")',context),/tone-violet/);
+vm.runInContext(fs.readFileSync('app/static/v4.js','utf8'),context);
+vm.runInContext(fs.readFileSync('app/static/v5.js','utf8'),context);
+const intake=vm.runInContext('issueIntakeHTML()',context);
+for(const f of seed.fields)assert.match(intake,new RegExp('data-workbook-key=\"'+f.key+'\"'));
+assert.equal(new Set([...intake.matchAll(/data-workbook-key=\"([^\"]+)/g)].map(x=>x[1])).size,98);
+assert.match(intake,/Developer RCA/);assert.match(intake,/Designated testing owner/);assert.match(intake,/20 MB/);
+assert.ok(!/name=\"(?:root_cause_summary|verified_by|closure_date)\"/.test(intake));
+console.log('Frontend rendering checks passed: roles, dropdowns, create form, rankings and L1 assistant.');
+
+vm.runInContext(fs.readFileSync('app/static/v6.js','utf8'),context);
+assert.match(intake,/id="create-media"[^>]*multiple/);assert.match(intake,/id="create-documents"[^>]*multiple/);
+vm.runInContext('state.user={role:"manager",effective_permissions:["reports","performance"]}',context);
+assert.equal(vm.runInContext('availablePages().includes("masters")',context),false);
+assert.match(vm.runInContext('reportsHub()',context),/Employee performance/);
+assert.ok(!vm.runInContext('reportsHub()',context).includes('User access register'));
+vm.runInContext('state.user={role:"super_admin",effective_permissions:["manage_masters","manage_rights","reports","performance","manage_users"]}',context);
+assert.equal(vm.runInContext('availablePages().includes("masters")',context),true);
+assert.match(vm.runInContext('dashboard()',context),/Employee performance & drilldowns/);
+console.log('Separate upload categories, reports hub and role visibility passed.');
+
+vm.runInContext(fs.readFileSync('app/static/v7.js','utf8'),context);
+const updatedIntake=vm.runInContext('issueIntakeHTML()',context);
+assert.match(updatedIntake,/New Requirement/);assert.match(updatedIntake,/Feature Request/);assert.match(updatedIntake,/business_justification/);assert.match(updatedIntake,/acceptance_criteria/);
+const current=vm.runInContext(`fullStatusHTML({issue:state.issues[0],attachments:[{id:'1',name:'evidence.csv',size:65}],comments:[{name:'QA',created_at:'2026-11-18',body:'Latest remarks: retest source file'}],history:[],cycles:[]},state.meta.fields)`,context);
+assert.match(current,/Latest remarks: retest source file/);assert.match(current,/evidence.csv/);assert.match(current,/Steps to Reproduce/);assert.ok(current.indexOf('LATEST ACTION')<current.indexOf('Fully detailed'));
+assert.match(vm.runInContext(`masterWizardHTML('Module','modify','manual',['Parser'],['Classification → Product Module'])`,context),/Edit \/ Modify/);
+assert.match(vm.runInContext(`masterWizardHTML('Module','rename','bulk',['Parser'],['Classification → Product Module'])`,context),/Download Excel format/);
+assert.match(vm.runInContext(`pageBreadcrumb('reports')`,context),/Back/);
+console.log('Full status, latest remarks, request type forms, master wizard and breadcrumbs passed.');
+
+vm.runInContext(`state.performance={employees:[1,2].map((id,i)=>({user_id:id,name:'Employee '+id,team:'Product Team',returns:0,repeat_occurrences:0,response_sla_breaches:i?4:1,resolution_sla_breaches:i?5:2,sla_breach_instances:i?9:3})),best_performers:[],worst_performers:[],teams:[],missing_attribution:0,note:'Rendering fixture'}`,context);
+const performanceRows=[...vm.runInContext('performancePage()',context).matchAll(/<tr class="clickable" data-perf="(\d+)">([\s\S]*?)<\/tr>/g)];
+assert.equal(performanceRows.length,2);for(const row of performanceRows)assert.equal((row[2].match(/<td>/g)||[]).length,20);assert.match(performanceRows[0][2],/<td>1<\/td><td>2<\/td><td>3<\/td>/);assert.match(performanceRows[1][2],/<td>4<\/td><td>5<\/td><td>9<\/td>/);console.log('SLA columns stay correctly aligned to each employee even with identical return/repeat counts.');
+vm.runInContext(fs.readFileSync('app/static/v8.js','utf8'),context);
+const notificationFixture={people:[{id:2,name:'Developer',role:'product_developer',team:'Product Team',active:true}],roles:['product_developer'],events:{created:'New request',comment:'Shared discussion',tray_report:'Open tray'},tokens:['recipient_name','issue_id'],schedule:{timezone:'Asia/Kolkata',daily_time:'18:00',weekly_time:'17:00'},permissions:{manage_notifications:true,edit_notification_templates:true,manage_notification_overrides:true},policy:{revision:1,timezone:'Asia/Kolkata',daily_time:'18:00',weekly_day:4,weekly_time:'17:00',defaults:{created:{enabled:true,frequency:'immediate'},comment:{enabled:true,frequency:'immediate'},tray_report:{enabled:true,frequency:'daily'}},groups:[{id:'product',name:'Product mandatory daily',scope:'team',value:'Product Team',rules:{comment:{frequency:'daily',locked:true}}}],users:{'2':{rules:{comment:{enabled:false,frequency:'off'}}}},templates:{created:{subject:'New {{issue_id}}',body:'Hello {{recipient_name}}'},comment:{subject:'Comment',body:'Text'},tray_report:{subject:'Tray',body:'Text'}}}};
+vm.runInContext(`notificationFixture=${JSON.stringify(notificationFixture)}`,context);
+assert.equal(vm.runInContext(`notificationEffective(notificationFixture.policy,notificationFixture.people[0],'comment').frequency`,context),'daily');
+assert.match(vm.runInContext(`notificationCentreHTML(notificationFixture,notificationFixture.policy,{tab:'events'})`,context),/Weekly summary/);
+assert.match(vm.runInContext(`notificationCentreHTML(notificationFixture,notificationFixture.policy,{tab:'groups'})`,context),/Mandatory/);
+assert.match(vm.runInContext(`notificationCentreHTML(notificationFixture,notificationFixture.policy,{tab:'templates'})`,context),/Email subject & body editor/);
+vm.runInContext('state.user={role:"manager",effective_permissions:["reports","performance"]}',context);assert.equal(vm.runInContext('availablePages().includes("notification_centre")',context),false);
+vm.runInContext('state.user={role:"product_developer",effective_permissions:["edit_notification_templates"]}',context);assert.equal(vm.runInContext('availablePages().includes("notification_centre")',context),true);
+console.log('Notification schedules, mandatory group inheritance, template editor and delegated page visibility passed.');

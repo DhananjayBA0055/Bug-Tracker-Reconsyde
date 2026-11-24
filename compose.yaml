@@ -1,0 +1,43 @@
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+
+    environment: &app_environment
+      SETTINGS_ENCRYPTION_KEY: ${SETTINGS_ENCRYPTION_KEY}
+      DATABASE_URL: ${DATABASE_URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_NAME: ${ADMIN_NAME:-Bancapp Administrator}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      TZ: Asia/Kolkata
+
+    ports:
+      - "127.0.0.1:${APP_PORT:-8000}:8000"
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - internal
+
+  worker:
+    build: .
+    command: ["python", "-m", "app.worker"]
+    restart: unless-stopped
+
+    depends_on:
+      app:
+        condition: service_healthy
+
+    environment: *app_environment
+
+    networks:
+      - internal
+
+networks:
+  internal:

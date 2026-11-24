@@ -1,0 +1,27 @@
+# Use with: docker compose -f compose.yaml -f compose.https.yaml up --build -d
+services:
+  app:
+    environment:
+      COOKIE_SECURE: "true"
+  worker:
+    environment:
+      COOKIE_SECURE: "true"
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set APP_DOMAIN to your public DNS hostname}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [internal]
+volumes:
+  caddy_data:
+  caddy_config:

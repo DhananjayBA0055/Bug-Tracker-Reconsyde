@@ -1,0 +1,100 @@
+Field,Key,Stage,Responsible person,Rule
+Bug ID,bug_id,Automatic / source reference,Application,Unique PostgreSQL sequence; original imported IDs preserved
+Date Reported,date_reported,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Reported By,reported_by,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Source,source,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Bug Scope,bug_scope,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Client / Tenant,client,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Client Ticket Ref,client_ticket_ref,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Product Module,product_module,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Recon Type,recon_type,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Environment,environment,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Detection Stage,detection_stage,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Deployment Phase,deployment_phase,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Found in Release,found_in_release,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Browser / Device,browser_device,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Build / Version Found,build_version_found,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Bug Category,bug_category,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Regression?,regression,Reporting / triage,Reporter / authorised editor,Conditional evidence activated when Yes
+Release Blocker?,release_blocker,Reporting / triage,Reporter / authorised editor,Conditional evidence activated when Yes
+Bug Title,title,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Steps to Reproduce,steps_to_reproduce,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Expected Result,expected_result,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Actual Result,actual_result,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Severity,severity,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Priority,priority,Reporting / triage,Reporter / authorised editor,Required for an internal report
+Financial Impact?,financial_impact,Reporting / triage,Reporter / authorised editor,Conditional evidence activated when Yes
+Clients Affected (No.),clients_affected,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Records Affected,records_affected,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Amount Impacted (INR),amount_impacted_inr,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Regulatory / Audit Impact?,regulatory_impact,Reporting / triage,Reporter / authorised editor,Conditional evidence activated when Yes
+Data Correction Required?,data_correction_required,Reporting / triage,Reporter / authorised editor,Conditional evidence activated when Yes
+Workaround Available,workaround_available,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Status,status,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Assigned To,assigned_to,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Team,team,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Open / Closed,open_closed,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Due Date (SLA),due_date,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Resolved Date,resolved_date,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Age (days),age_days,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+SLA Status,sla_status,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Target Fix Release,target_fix_release,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Target Release Date,target_release_date,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Sprint / Iteration,sprint,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Actual Fix Release,actual_fix_release,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+Actual Release Date,actual_release_date,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Release Plan Status,release_plan_status,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Post-Deploy Action,post_deploy_action,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+Resolution Type,resolution_type,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Root Cause Category,root_cause_category,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Root Cause & Fix Summary,root_cause_summary,Automatic / source reference,Application,Combined developer RCA and resolution; source-era text stays historical
+Code / PR / Commit Ref,code_ref,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Change / Deployment Ticket Ref,deployment_ticket_ref,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+Test Case / Evidence Ref,test_evidence_ref,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+Verified By (QA),verified_by,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+QA Verified Date,qa_verified_date,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Data Correction Completed On,data_correction_completed_on,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+RCA Shared with Client?,rca_shared,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+Client Confirmation,client_confirmation,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+Closed By,closed_by,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Closure Date,closure_date,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Closure Remarks,closure_remarks,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+Reopen Count,reopen_count,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Remarks,remarks,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Issue type,issue_type,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Product / process bucket,bucket,Automatic / source reference,Application,"Computed, actor-stamped, workflow-controlled or immutable source reference"
+Process SPOC,process_spoc,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Delivery stage,current_stage,Delivery / communication,Responsible developer or tester,Actual date; sign-off restricted to designated tester
+Development target date,development_target_date,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Bancapp UAT target date,bancapp_uat_target_date,Reporting / triage,Reporter / authorised editor,Optional supporting context
+ProcessDev handover target,handover_target_date,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Actual ProcessDev handover,actual_handover_date,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+ProcessDev sign-off,process_signoff_date,Delivery / communication,Responsible developer or tester,Actual date; sign-off restricted to designated tester
+Tested by process team,tested_by_process_team,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+Responded to client,responded_to_client,Delivery / communication,Responsible developer or tester,Actual date; sign-off restricted to designated tester
+Email Sent Date / Mail Sent Date,communication_email_date,Delivery / communication,Responsible developer or tester,Actual date; sign-off restricted to designated tester
+Bancapp UAT Deployment Date,bancapp_uat_deployment_date,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+Bancapp UAT Sign-off Date,bancapp_uat_signoff_date,Delivery / communication,Responsible developer or tester,Actual date; sign-off restricted to designated tester
+Bancapp ProcessDev Deployment Date,processdev_deployment_date,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+Client UAT Deployment Date,client_uat_deployment_date,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+Client Production Deployment Date,client_production_deployment_date,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+Action Requested / Business Outcome,action_requested,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Last Working Build / Version,last_working_version,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Impact Assessment,impact_assessment,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Impact Details / Assessment Notes,impact_notes,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Release Blocker Reason,release_blocker_reason,Reporting / triage,Reporter / authorised editor,Optional supporting context
+Data Correction Scope & Plan,data_correction_plan,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Developer Test Evidence Ref,developer_test_evidence,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Regression Test Ref,regression_test_ref,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Regression Test Result,regression_test_result,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+QA / Designer Test Evidence Ref,qa_test_evidence,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+Deployment Evidence Ref,deployment_evidence,Deployment,Assigned developer / release administrator,Actual release/change/evidence; mandatory for applicable production fixes
+Client Confirmation Evidence Ref,client_confirmation_ref,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+RCA Communication Evidence Ref,rca_shared_ref,Testing / closure,Designated QA or Process Designer,Evidence and conditional closure requirements
+Duplicate Of Bug ID,duplicate_of_issue_id,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Problem Family / Repeat Signature,repeat_signature,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Preventive / Recurrence Action,prevention_action,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Fix Verification / L1 Check Steps,verification_steps,Rectification,Assigned developer,"Required when relevant to resolution, environment or regression"
+Historical Source Product Solution Recommendation,source_solution_recommendation,Automatic / source reference,Application,"Original source recommendation, not verified developer RCA"
+Business Justification,business_justification,Requirement / feature intake,Reporter,Required for non-bug requests
+Acceptance Criteria,acceptance_criteria,Requirement / feature intake,Reporter,Required for non-bug requests
